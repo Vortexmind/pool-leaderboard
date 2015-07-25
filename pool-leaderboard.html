@@ -17,10 +17,21 @@
 	  <h1>Pool Leaderboard</h1>
     </div>
   </div>
+  {{> addtask}}
 
   {{> taskstp}}
   </div>
 </body>
+
+<template name="addtask">
+<div class="row">
+	<div class="col-md-12">
+	<form class="new-task">
+		<input type="text" name="text" placeholder="Type to add new tasks" />
+	</form>
+	</div>
+</div>
+</template>
 
 <template name="hello">
 <div class="row">

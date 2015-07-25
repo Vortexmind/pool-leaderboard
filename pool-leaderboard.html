@@ -17,6 +17,8 @@
   {{> addGame}}
   
   {{> leaderboard}}
+  
+  {{> yourGames}}
 
 
 </body>
@@ -54,18 +56,41 @@
   <h2>Add a game</h2>
   <form class="addGame">
   <div class="row">
-    <div class="col-md-10">
-      <label class="radio-inline">
-          <input type="text" class="form-control" placeholder="Player 1"/>
-      </label>
-      <label class="radio-inline">
-          <input type="text" class="form-control"  placeholder="Player 2" />
-      </label>
+    <div class="col-md-12">
+      <ul class="list-inline">
+        <li><input type="text" name="winner" class="form-control" placeholder="Winner"/></li>
+        <li><input type="text" name="loser" class="form-control" placeholder="Loser" /></li>
+        <li><button class="btn btn-default addGame" type="submit">Add Game</button></li>
+      </ul>
     </div>
-    <div class="col-md-2"><button class="btn btn-default" type="submit">Confirm</button></div>
   </div>
   </form>
 </div>
+</template>
+
+<template name="yourGames">
+<div class="container">
+  <h2>Your Games</h2>  
+  <div class="row">
+    <div class="col-md-12">
+      <ul>
+        {{#each userGames}}
+          {{> userGame}}
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</div>
+</template>
+
+<template name="userGame">
+<li>
+  <ul class="list-inline">
+    <li>Winner: {{winner}}</li>
+    <li>Loser : {{loser}}</li>
+    <li>Confirmed: {{#if confirmed}}Yes{{else}}No{{/if}}</li>
+  </ul>
+    </li>
 </template>
 
 <!--

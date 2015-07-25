@@ -1,22 +1,85 @@
 PoolGames = new Mongo.Collection("poolgames");
+Leaderboard = new Mongo.Collection("leaderboard");
 
 if (Meteor.isClient) {	  
   Meteor.subscribe("poolgames");
+  Meteor.subscribe("leaderboard");
   
   Accounts.ui.config({
     passwordSignupFields: "USERNAME_AND_EMAIL"
+  });
+  
+  Template.leaderboard.helpers({ 
+	games : function() { 
+		return Leaderboard.find({});	
+	} 
+  });
+  
+  Template.yourGames.helpers({ 
+	userGames : function() { 
+		return PoolGames.find({});
+	}
+  })
+  
+  Template.addGame.events({
+	  'submit .addGame' : function (e) {
+      e.preventDefault();
+      var winner = e.target.winner.value;
+      var loser = e.target.loser.value;
+ 
+	  Meteor.call("addUnconfirmedGame", winner, loser);
+ 
+      // Clear form
+      event.target.winner.value = "";
+      event.target.loser.value = "";
+    }
+	  
   });
 } 
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
-    // code to run on server at startup
   });
   
   Meteor.publish("poolgames", function () {
-    return PoolGames.find();
+    return PoolGames.find({ 'owner' : this.userId});
+  });
+  
+  Meteor.publish("leaderboard", function () { 
+	return Leaderboard.find();
   });
 }
+
+Meteor.methods({
+  addUnconfirmedGame: function (winner,loser) {
+    //Ensure the user is logged in before being able to add a game
+    if (! Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+    // Ensure both players are in the db
+    if ( ! Meteor.users.findOne({ 'username' : winner }) ) { 
+	  throw new Meteor.Error("winner-not-found");
+	}
+
+	if ( ! Meteor.users.findOne({ 'username' : loser }) ) { 
+	  throw new Meteor.Error("loser-not-found");
+	}
+	
+	if ( winner == loser ) { 
+	  throw new Meteor.Error("play-with-self");
+	}
+
+	// Insert the game
+    PoolGames.insert({
+	  createdAt: new Date(),
+      owner: Meteor.userId(),
+      username: Meteor.user().username,
+      winner: winner,
+      loser: loser,
+      confirmed : false
+    });
+  }
+});
 
 /*
  Template.taskstp.helpers({

@@ -1,12 +1,24 @@
-Tasks = new Mongo.Collection("tasks");
+PoolGames = new Mongo.Collection("poolgames");
 
 if (Meteor.isClient) {	  
-  Meteor.subscribe("tasks");
+  Meteor.subscribe("poolgames");
   
   Accounts.ui.config({
-    passwordSignupFields: "USERNAME_ONLY"
+    passwordSignupFields: "USERNAME_AND_EMAIL"
   });
- 
+} 
+
+if (Meteor.isServer) {
+  Meteor.startup(function () {
+    // code to run on server at startup
+  });
+  
+  Meteor.publish("poolgames", function () {
+    return PoolGames.find();
+  });
+}
+
+/*
  Template.taskstp.helpers({
     tasks: function () {
       if (Session.get("hideCompleted")) {
@@ -90,3 +102,5 @@ Meteor.methods({
     Tasks.update(taskId, { $set: { checked: !setChecked} });
   }
 });
+
+*/

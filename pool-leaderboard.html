@@ -16,6 +16,11 @@
     <div class="col-md-12">
 	  <h1>Pool Leaderboard</h1>
     </div>
+ </div>
+ <div class="row">
+    <div class="col-md-12">
+    {{> loginButtons}}
+    </div>
   </div>
   {{> addtask}}
 
@@ -26,9 +31,15 @@
 <template name="addtask">
 <div class="row">
 	<div class="col-md-12">
-	<form class="new-task">
-		<input type="text" name="text" placeholder="Type to add new tasks" />
-	</form>
+     <label class="hide-completed">
+        <input type="checkbox" checked="{{hideCompleted}}" />
+        Hide Completed Tasks 
+      </label>
+      {{#if currentUser}}
+      <form class="new-task">
+        <input type="text" name="text" placeholder="Type to add new tasks" />
+      </form>
+       {{/if}}
 	</div>
 </div>
 </template>
@@ -36,6 +47,7 @@
 <template name="taskstp">
 <div class="row">
   <div class="col-md-8">
+   <h2>Incomplete: {{incompleteCount}}</h2>
 	  <ul>
     {{#each tasks}}
       {{> task}}
@@ -49,6 +61,6 @@
   <li class="{{#if checked}}checked{{/if}}">
     <button class="delete">&times;</button>
     <input type="checkbox" checked="{{checked}}" class="toggle-checked" />
-    <span class="text">{{text}}</span>
+    <span class="text"><strong>{{username}}</strong> - {{text}}</span>
   </li>
 </template>

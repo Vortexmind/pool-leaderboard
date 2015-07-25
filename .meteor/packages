@@ -6,6 +6,9 @@
 
 meteor-platform
 autopublish
-insecure
 fourseven:scss
 reywood:bootstrap3-sass
+accounts-ui
+accounts-password
+accounts-facebook
+accounts-twitter

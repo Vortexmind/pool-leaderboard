@@ -11,9 +11,9 @@
 </head>
 
 <body>
-  <div class="container">
   {{> heading}}
 
+  <div class="container">
   {{#if currentUser}}
     {{> addGame}}
   {{/if}}
@@ -27,33 +27,50 @@
 </body>
 
 <template name="heading">
-<nav>
-  <div class="row">
-    <div class="col-md-12">
-      <ul class="list-inline">
-        <li class="nav-item">Leaderboard</li>
-        <li class="nav-item">Your Games</li>
-        <li class="nav-item auth">{{> loginButtons}}</li>
-      </ul>
+<header>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Pool Leaderboard</a>
     </div>
-  </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="#leaderboard">Leaderboard</a></li>
+        {{#if currentUser}}<li><a href="#my-games">My Games</a></li>{{/if}}
+        <li>{{> loginButtons}}</li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li class="active"><a href="/">Home <span class="sr-only">(current)</span></a></li>
+      </ul>
+
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
 </nav>
+</header>
 </template>
 
 <template name="leaderboard">
 <div class="row">
-  <div class="col-md-6">
-    <h2>Games Leaderboard</h2>
+  <div class="col-md-12">
+    <h2><a id="leaderboard">Games Leaderboard</a></h2>
   </div>
 </div>
 <div class="row">
-  <div class="col-md-6"><h4>Player</h4></div>
-  <div class="col-md-6"><h4>Games Won </h4></div>
+  <div class="col-md-6 col-xs-6"><h4>Player</h4></div>
+  <div class="col-md-6 col-xs-6"><h4>Games Won </h4></div>
 </div>
 {{#each games}}
 <div class="row">
-  <div class="col-md-6">{{username}}</div>
-  <div class="col-md-6">{{wins}}</div>
+  <div class="col-md-6 col-xs-6">{{username}}</div>
+  <div class="col-md-6 col-xs-6">{{wins}}</div>
 </div>
 {{/each}}
 </template>
@@ -65,15 +82,17 @@
   </div>
 </div>
 <div class="row form-group">
-  <div class="col-md-12">
-    <form class="addGame">
-    <ul class="list-inline">
-      <li><input type="text" name="playerOne" class="form-control player-one" value="{{currentUser.username}}" disabled /></li>
-      <li><input type="text" name="playerTwo" class="form-control player-two" placeholder="Player Two" tabindex="1"/></li>
-      <li><button class="btn btn-default addGame" type="submit" {{isDisabled}}>Add Game</button></li>
-    </ul>
-    </form>
+  <form class="addGame">
+  <div class="col-md-4">
+    <input type="text" name="playerOne" class="form-control player-one" value="{{currentUser.username}}" disabled />
   </div>
+  <div class="col-md-4">
+      <input type="text" name="playerTwo" class="form-control player-two" placeholder="Player Two" tabindex="1"/>
+  </div>
+  <div class="col-md-4">
+      <button class="btn btn-default addGame" type="submit" {{isDisabled}}>Add Game</button>
+  </div>
+  </form>
 </div>
 
 
@@ -82,7 +101,7 @@
 <template name="yourGames">
 <div class="row">
   <div class="col-md-12">
-    <h2>Your Games</h2>
+    <h2><a id="my-games">My Games</a></h2>
   </div>
 </div>
 <div class="row">
@@ -95,9 +114,9 @@
 <div class="row">
   <div class="col-md-12">
     <div class="row">
-      <div class="col-md-4 form-group"><h4>Date played</h4></div>
-      <div class="col-md-4 form-group"><h4>Choose winner</h4></div>
-      <div class="col-md-4 form-group"><h4>Confirmed?</h4></div>
+      <div class="col-md-4 col-xs-4 form-group"><h4>Date played</h4></div>
+      <div class="col-md-4 col-xs-4 form-group"><h4>Choose winner</h4></div>
+      <div class="col-md-4 col-xs-4 form-group"><h4>Confirmed?</h4></div>
     </div>
       {{#each userGames}}
         {{> userGame}}
@@ -108,12 +127,14 @@
 
 <template name="userGame">
 <div class="row">
-  <div class="col-md-4 form-group"><label>{{formatDate createdAt}}</label></div>
-  <div class="col-md-4 form-group game-{{_id}}">
-    <button {{enableIfConfirmed}} class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[0].player}}" value="{{players.[0].player}}">{{players.[0].player}}</button>
-    <button {{enableIfConfirmed}} class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[1].player}}" value="{{players.[1].player}}">{{players.[1].player}}</button>
+  <div class="col-md-4 col-xs-4 form-group"><label>{{formatDate createdAt}}</label></div>
+  <div class="col-md-4 col-xs-4 form-group game-{{_id}}">
+    <div class="row">
+      <div class="col-md-6"><button {{enableIfConfirmed}} class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[0].player}}" value="{{players.[0].player}}">{{players.[0].player}}</button></div>
+      <div class="col-md-6"><button {{enableIfConfirmed}} class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[1].player}}" value="{{players.[1].player}}">{{players.[1].player}}</button></div>
+    </div>
   </div>
-  <div class="col-md-4 form-group">
+  <div class="col-md-4 col-xs-4 form-group">
     {{#if confirmed}}
       <i class="fa fa-check"></i>
     {{else}}

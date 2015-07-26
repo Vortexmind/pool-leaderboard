@@ -5,6 +5,9 @@ if (Meteor.isClient) {
   Meteor.subscribe("poolgames");
   Meteor.subscribe("leaderboard");
 
+	Session.set('userFound',false);
+	Session.set('typedUser','');
+
   Accounts.ui.config({
     passwordSignupFields: "USERNAME_AND_EMAIL"
   });
@@ -60,8 +63,8 @@ if (Meteor.isClient) {
 					if (typeof err !== 'undefined') {
 						e.target.checked = false;
 						var formContainer = $(e.target).closest('.form-group');
-						formContainer.addClass('has-error');
-						setTimeout(function() { formContainer.removeClass('has-error'); },800);
+						formContainer.addClass('has-error').addClass('has-feedback');;
+						setTimeout(function() { formContainer.removeClass('has-error').removeClass('has-feedback'); },800);
 					}
 			});
 		},
@@ -75,13 +78,43 @@ if (Meteor.isClient) {
       e.preventDefault();
       var playerTwo = e.target.playerTwo.value;
 
-			Meteor.call("addUnconfirmedGame", playerTwo);
+			Meteor.call("addUnconfirmedGame", playerTwo,function(err) {
+					if (typeof err !== 'undefined') {
+						var formContainer = $(e.target).closest('.form-group');
+						formContainer.addClass('has-error').addClass('has-feedback');
+						setTimeout(function() { formContainer.removeClass('has-error').removeClass('has-feedback'); },800);
+					} else {
+						// Clear form
+						event.target.playerTwo.value = "";
+					}
+			});
 
-      // Clear form
-      event.target.playerTwo.value = "";
-    }
+    },
+    'blur .player-two' : function (e) {
+			var typedUser = e.target.value;
 
+			if (Session.get('typedUser') === typedUser) { return; }
+
+			var check = Meteor.call("findUser",typedUser, function(err,res){
+				Session.set('userFound',res);
+				Session.set('typedUser',typedUser);
+				var formContainer = $(e.target).closest('.form-group');
+				if (res) {
+						formContainer.addClass('has-success').addClass('has-feedback');
+						setTimeout(function() { formContainer.removeClass('has-success').removeClass('has-feedback'); },800);
+				} else {
+						formContainer.addClass('has-error').addClass('has-feedback');
+						setTimeout(function() { formContainer.removeClass('has-error').removeClass('has-feedback'); },800);
+				}
+			});
+		}
   });
+
+  Template.addGame.helpers({
+		isDisabled : function() {
+				if (Session.get('userFound') !== true) return "disabled";
+		}
+	});
 }
 
 if (Meteor.isServer) {
@@ -176,7 +209,8 @@ Meteor.methods({
 
 		Meteor.call('updateLeaderboard',game.winner);
 
-  }, updateLeaderboard : function (winner) {
+  },
+  updateLeaderboard : function (winner) {
 		check(winner, String);
 
 	  var found = Meteor.users.findOne({'username' : winner });
@@ -186,6 +220,17 @@ Meteor.methods({
 		}
 
 		Leaderboard.update({"username" : winner},{$inc : {'wins' : 1 }}, { 'upsert' : true } );
+	},
+	findUser : function(user) {
+		check(user, String);
+
+		var found = Meteor.users.findOne({'username' : user });
+
+		if (typeof found === 'undefined') {
+			return false;
+		} else {
+			return true;
+		}
+
 	}
 });
-

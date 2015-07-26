@@ -57,12 +57,12 @@
 <div class="container">
   <h2>Add a game</h2>
   <form class="addGame">
-  <div class="row">
+  <div class="row form-group">
     <div class="col-md-12">
       <ul class="list-inline">
-        <li><input type="text" name="playerOne" class="form-control" value="{{currentUser.username}}" disabled /></li>
-        <li><input type="text" name="playerTwo" class="form-control" placeholder="Player Two" /></li>
-        <li><button class="btn btn-default addGame" type="submit">Add Game</button></li>
+        <li><input type="text" name="playerOne" class="form-control player-one" value="{{currentUser.username}}" disabled /></li>
+        <li><input type="text" name="playerTwo" class="form-control player-two" placeholder="Player Two" tabindex="1"/></li>
+        <li><button class="btn btn-default addGame" type="submit" {{isDisabled}}>Add Game</button></li>
       </ul>
     </div>
   </div>

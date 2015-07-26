@@ -11,7 +11,7 @@
 </head>
 
 <body>
-
+  <div class="container">
   {{> heading}}
 
   {{#if currentUser}}
@@ -23,76 +23,85 @@
   {{#if currentUser}}
     {{> yourGames}}
   {{/if}}
-
-
+  </div>
 </body>
 
 <template name="heading">
 <nav>
-  <div class="container">
-    <ul class="list-inline">
-      <li class="nav-item">Leaderboard</li>
-      <li class="nav-item">Your Games</li>
-      <li class="nav-item auth">{{> loginButtons}}</li>
-    </ul>
+  <div class="row">
+    <div class="col-md-12">
+      <ul class="list-inline">
+        <li class="nav-item">Leaderboard</li>
+        <li class="nav-item">Your Games</li>
+        <li class="nav-item auth">{{> loginButtons}}</li>
+      </ul>
+    </div>
   </div>
 </nav>
 </template>
 
 <template name="leaderboard">
-<div class="container">
-  <h2>Games Leaderboard</h2>
-  <div class="row">
-    <div class="col-md-6"><h4>Player</h4></div>
-    <div class="col-md-6"><h4>Games Won </h4></div>
+<div class="row">
+  <div class="col-md-6">
+    <h2>Games Leaderboard</h2>
   </div>
-  {{#each games}}
-  <div class="row">
-    <div class="col-md-6">{{username}}</div>
-    <div class="col-md-6">{{wins}}</div>
-  </div>
-  {{/each}}
 </div>
+<div class="row">
+  <div class="col-md-6"><h4>Player</h4></div>
+  <div class="col-md-6"><h4>Games Won </h4></div>
+</div>
+{{#each games}}
+<div class="row">
+  <div class="col-md-6">{{username}}</div>
+  <div class="col-md-6">{{wins}}</div>
+</div>
+{{/each}}
 </template>
 
 <template name="addGame">
-<div class="container">
-  <h2>Add a game</h2>
-  <form class="addGame">
-  <div class="row form-group">
-    <div class="col-md-12">
-      <ul class="list-inline">
-        <li><input type="text" name="playerOne" class="form-control player-one" value="{{currentUser.username}}" disabled /></li>
-        <li><input type="text" name="playerTwo" class="form-control player-two" placeholder="Player Two" tabindex="1"/></li>
-        <li><button class="btn btn-default addGame" type="submit" {{isDisabled}}>Add Game</button></li>
-      </ul>
-    </div>
+<div class="row">
+  <div class="col-md-12">
+    <h2>Add a game</h2>
   </div>
-  </form>
 </div>
+<div class="row form-group">
+  <div class="col-md-12">
+    <form class="addGame">
+    <ul class="list-inline">
+      <li><input type="text" name="playerOne" class="form-control player-one" value="{{currentUser.username}}" disabled /></li>
+      <li><input type="text" name="playerTwo" class="form-control player-two" placeholder="Player Two" tabindex="1"/></li>
+      <li><button class="btn btn-default addGame" type="submit" {{isDisabled}}>Add Game</button></li>
+    </ul>
+    </form>
+  </div>
+</div>
+
+
 </template>
 
 <template name="yourGames">
-<div class="container">
-  <h2>Your Games</h2>
-  <div class="row">
-    <div class="col-md-12 form-group">
-      <div class="checkbox">
-        <label><input type="checkbox" class="filter-confirmed" checked="{{filterConfirmed}}">Show only unconfirmed</label>
-      </div>
+<div class="row">
+  <div class="col-md-12">
+    <h2>Your Games</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 form-group">
+    <div class="checkbox">
+      <label><input type="checkbox" class="filter-confirmed" checked="{{filterConfirmed}}">Show only unconfirmed</label>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="row">
-        <div class="col-md-4 form-group"><h4>Date played</h4></div>
-        <div class="col-md-4 form-group"><h4>Choose winner</h4></div>
-        <div class="col-md-4 form-group"><h4>Confirmed?</h4></div>
-      </div>
-        {{#each userGames}}
-          {{> userGame}}
-        {{/each}}
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-4 form-group"><h4>Date played</h4></div>
+      <div class="col-md-4 form-group"><h4>Choose winner</h4></div>
+      <div class="col-md-4 form-group"><h4>Confirmed?</h4></div>
     </div>
+      {{#each userGames}}
+        {{> userGame}}
+      {{/each}}
   </div>
 </div>
 </template>

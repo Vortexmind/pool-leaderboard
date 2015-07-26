@@ -72,7 +72,14 @@
 
 <template name="yourGames">
 <div class="container">
-  <h2>Running Games</h2>
+  <h2>Your Games</h2>
+  <div class="row">
+    <div class="col-md-12 form-group">
+      <div class="checkbox">
+        <label><input type="checkbox" class="filter-confirmed" checked="{{filterConfirmed}}">Show only unconfirmed</label>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-md-12">
       <div class="row">
@@ -92,21 +99,23 @@
 <div class="row">
   <div class="col-md-4 form-group"><label>{{formatDate createdAt}}</label></div>
   <div class="col-md-4 form-group game-{{_id}}">
-    <button {{isDisabled}} class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[0].player}}" value="{{players.[0].player}}">{{players.[0].player}}</button>
-    <button {{isDisabled}} class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[1].player}}" value="{{players.[1].player}}">{{players.[1].player}}</button>
+    <button {{enableIfConfirmed}} class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[0].player}}" value="{{players.[0].player}}">{{players.[0].player}}</button>
+    <button {{enableIfConfirmed}} class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[1].player}}" value="{{players.[1].player}}">{{players.[1].player}}</button>
   </div>
   <div class="col-md-4 form-group">
     {{#if confirmed}}
       <i class="fa fa-check"></i>
     {{else}}
     {{#if isGameOwner}}
-    <i class="fa fa-cog fa-spin"></i>
+      <i class="fa fa-cog fa-spin"></i>
     {{else}}
-      <input type="checkbox" checked="{{confirmed}}" class="confirm-game form-control" />
+      <div class="checkbox">
+      <label>
+        <input {{enableIfWinnerSet}} type="checkbox" checked="{{confirmed}}" class="confirm-game" /> Tick to confirm
+      </label>
+      </div>
     {{/if}}
     {{/if}}
-
-
   </div>
 </div>
 </template>

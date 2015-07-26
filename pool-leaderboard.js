@@ -28,22 +28,42 @@ if (Meteor.isClient) {
 
   Template.yourGames.helpers({
 		userGames : function() {
-			return PoolGames.find({},{sort: {createdAt : 1}});
+			if (Session.get("hideConfirmed")) {
+				return PoolGames.find({confirmed: {$ne: true}},{sort: {createdAt : 1}});
+			} else {
+				return PoolGames.find({},{sort: {createdAt : 1}});
+			}
 		}
   });
+
+  Template.yourGames.events({
+		"change .filter-confirmed": function (event) {
+      Session.set("hideConfirmed", event.target.checked);
+    }
+	});
 
   Template.userGame.helpers({
 		isGameOwner : function() {
 			return this.owner === Meteor.user().username;
 		},
-		isDisabled : function() {
+		enableIfConfirmed : function() {
 			if(this.confirmed) return "disabled";
+		},
+		enableIfWinnerSet : function() {
+			if (this.winner === '') return "disabled";
 		}
   });
 
   Template.userGame.events({
-    "click .confirm-game" : function () {
-      Meteor.call("confirmGame",this._id);
+    "click .confirm-game" : function (e) {
+      Meteor.call("confirmGame",this._id,function(err) {
+					if (typeof err !== 'undefined') {
+						e.target.checked = false;
+						var formContainer = $(e.target).closest('.form-group');
+						formContainer.addClass('has-error');
+						setTimeout(function() { formContainer.removeClass('has-error'); },800);
+					}
+			});
 		},
 		"click .winner-btn" : function(e) {
 			Meteor.call("setWinner",this._id,e.target.value);

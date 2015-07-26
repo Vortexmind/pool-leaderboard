@@ -73,6 +73,11 @@
   <h2>Running Games</h2>  
   <div class="row">
     <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-4 form-group"><h4>Date played</h4></div>
+        <div class="col-md-4 form-group"><h4>Choose winner</h4></div>
+        <div class="col-md-4 form-group"><h4>Confirmed?</h4></div>
+      </div>
         {{#each userGames}}
           {{> userGame}}
         {{/each}}
@@ -83,65 +88,17 @@
 
 <template name="userGame">
 <div class="row">
-  <div class="col-md-4 form-group"><label>Choose winner</label><button class="btn btn-default form-control">{{playerOne}}</button><button class="btn btn-default form-control">{{playerTwo}}</button></div>
-  <div class="col-md-4 form-group"><label>Click to confirm</label><input type="checkbox" checked="{{confirmed}}" class="toggle-confirmation form-control" /></div>
-  <div class="col-md-4">{{formatDate createdAt}}</div>
-</div>
-</template>
-
-<!--
-<body>
-  <div class="container">
-  <div class="row">
-    <div class="col-md-12">
-	  <h1>Pool Leaderboard</h1>
-    </div>
- </div>
- <div class="row">
-    <div class="col-md-12">
-    {{> loginButtons}}
-    </div>
+  <div class="col-md-4 form-group"><label>{{formatDate createdAt}}</label></div>
+  <div class="col-md-4 form-group game-{{_id}}">
+    <button class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[0].player}}" value="{{players.[0].player}}">{{players.[0].player}}</button>
+    <button class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[1].player}}" value="{{players.[1].player}}">{{players.[1].player}}</button>
   </div>
-  {{> addtask}}
-
-  {{> taskstp}}
-  </div>
-</body>
-
-<template name="addtask">
-<div class="row">
-	<div class="col-md-12">
-     <label class="hide-completed">
-        <input type="checkbox" checked="{{hideCompleted}}" />
-        Hide Completed Tasks 
-      </label>
-      {{#if currentUser}}
-      <form class="new-task">
-        <input type="text" name="text" placeholder="Type to add new tasks" />
-      </form>
-       {{/if}}
-	</div>
-</div>
-</template>
-
-<template name="taskstp">
-<div class="row">
-  <div class="col-md-8">
-   <h2>Incomplete: {{incompleteCount}}</h2>
-	  <ul>
-    {{#each tasks}}
-      {{> task}}
-    {{/each}}
-    </ul>
+  <div class="col-md-4 form-group">
+    {{#if confirmed}}
+      <i class="fa fa-check"></i>
+    {{else}}
+      <input type="checkbox" checked="{{confirmed}}" class="confirm-game form-control" />
+    {{/if}}
   </div>
 </div>
 </template>
-
-<template name="task">
-  <li class="{{#if checked}}checked{{/if}}">
-    <button class="delete">&times;</button>
-    <input type="checkbox" checked="{{checked}}" class="toggle-checked" />
-    <span class="text"><strong>{{username}}</strong> - {{text}}</span>
-  </li>
-</template>
--->

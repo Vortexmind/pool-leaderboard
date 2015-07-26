@@ -12,11 +12,11 @@ if (Meteor.isClient) {
   Template.registerHelper('formatDate', function(date) {
 		return moment(date).format('MM-DD-YYYY HH:mm');
   });
-  
-  Template.registerHelper('getGameBtnClass',function(winner,player) { 
-		if (winner === '') { 
+
+  Template.registerHelper('getGameBtnClass',function(winner,player) {
+		if (winner === '') {
 				return 'btn-warning';
-		} 
+		}
 		if ( winner === player ) { return 'btn-success'; } else { return 'btn-danger'; }
 	});
 
@@ -31,26 +31,19 @@ if (Meteor.isClient) {
 			return PoolGames.find({});
 		}
   });
-  
-  /*
-  Template.userGames.helpers({
-		isGameOwner : function(owner) { 
-			var user = Meteor.users.findOne({'_id':this.userId});
-			return owner === user.username;		
+
+  Template.userGame.helpers({
+		isGameOwner : function() {
+			return this.owner === Meteor.user().username;
 		}
   });
-  */
 
   Template.userGame.events({
     "click .confirm-game" : function () {
       Meteor.call("confirmGame",this._id);
 		},
-		"click .winner-btn" : function(e) { 
-			$('div.game-'+this._id+' button').removeClass('btn-warning').addClass('btn-danger');
-				
+		"click .winner-btn" : function(e) {
 			Meteor.call("setWinner",this._id,e.target.value);
-			
-			$(e.target).removeClass('btn-danger').addClass('btn-success');
 		}
   });
 
@@ -88,11 +81,11 @@ Meteor.methods({
     if (! Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
-		
+
 		check(playerTwo, String);
-		
+
 		var found = Meteor.users.findOne({'username' : playerTwo });
-		
+
 		if ( typeof found == 'undefined' ) {
 			throw new Meteor.Error('player-not-found');
 		}
@@ -117,24 +110,23 @@ Meteor.methods({
 			'confirmed' : false
 		});
   },
-  setWinner : function(gameId,winner) { 
+  setWinner : function(gameId,winner) {
 		check(gameId, String);
 		check(winner, String);
-	
+
 		var game = PoolGames.findOne(
 		 { $and : [
 				{'_id' : gameId},
 				{'confirmed' : { $ne : true }}
 			]
-		 });		 
- 
+		 });
+
 		 PoolGames.update(game._id, { $set : { 'winner' : winner}});
-		
+
 	},
   confirmGame: function (gameId) {
 	 check(gameId, String);
-	 
-	 console.log("Attempting confirmation of " + gameId);
+
 	 var game = PoolGames.findOne(
 	 { $and : [
 			{'_id' : gameId},
@@ -142,9 +134,8 @@ Meteor.methods({
 			{'owner' : { $ne : Meteor.user().username }}
 		]
 	 });
-	 
+
 	 if ( typeof game == 'undefined' ) {
-			console.log("Game not found or not ready for confirmation");
 			throw new Meteor.Error('game-not-ready');
 	 }
 

@@ -58,8 +58,8 @@
   <div class="row">
     <div class="col-md-12">
       <ul class="list-inline">
-        <li><input type="text" name="winner" class="form-control" placeholder="Winner"/></li>
-        <li><input type="text" name="loser" class="form-control" placeholder="Loser" /></li>
+        <li><input type="text" name="playerOne" class="form-control" value="{{currentUser.username}}" disabled /></li>
+        <li><input type="text" name="playerTwo" class="form-control" placeholder="Player Two" /></li>
         <li><button class="btn btn-default addGame" type="submit">Add Game</button></li>
       </ul>
     </div>
@@ -70,27 +70,23 @@
 
 <template name="yourGames">
 <div class="container">
-  <h2>Your Games</h2>  
+  <h2>Running Games</h2>  
   <div class="row">
     <div class="col-md-12">
-      <ul>
         {{#each userGames}}
           {{> userGame}}
         {{/each}}
-      </ul>
     </div>
   </div>
 </div>
 </template>
 
 <template name="userGame">
-<li>
-  <ul class="list-inline">
-    <li>Winner: {{winner}}</li>
-    <li>Loser : {{loser}}</li>
-    <li>Confirmed: {{#if confirmed}}Yes{{else}}No{{/if}}</li>
-  </ul>
-    </li>
+<div class="row">
+  <div class="col-md-4 form-group"><label>Choose winner</label><button class="btn btn-default form-control">{{playerOne}}</button><button class="btn btn-default form-control">{{playerTwo}}</button></div>
+  <div class="col-md-4 form-group"><label>Click to confirm</label><input type="checkbox" checked="{{confirmed}}" class="toggle-confirmation form-control" /></div>
+  <div class="col-md-4">{{formatDate createdAt}}</div>
+</div>
 </template>
 
 <!--

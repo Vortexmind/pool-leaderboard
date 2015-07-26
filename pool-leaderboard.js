@@ -9,6 +9,10 @@ if (Meteor.isClient) {
     passwordSignupFields: "USERNAME_AND_EMAIL"
   });
   
+  Template.registerHelper('formatDate', function(date) {
+	return moment(date).format('MM-DD-YYYY HH:SS');
+  });
+  
   Template.leaderboard.helpers({ 
 	games : function() { 
 		return Leaderboard.find({});	
@@ -21,17 +25,24 @@ if (Meteor.isClient) {
 	}
   })
   
+  Template.userGame.events({
+    "click .toggle-confirmation": function () {	
+      Meteor.call("toggleConfirm",this._id,this.playerTwoId,this.checked);
+    }
+	  
+  });
+  
   Template.addGame.events({
 	  'submit .addGame' : function (e) {
       e.preventDefault();
-      var winner = e.target.winner.value;
-      var loser = e.target.loser.value;
+      var playerOne = e.target.playerOne.value;
+      var playerTwo = e.target.playerTwo.value;
  
-	  Meteor.call("addUnconfirmedGame", winner, loser);
+	  Meteor.call("addUnconfirmedGame", playerOne, playerTwo);
  
       // Clear form
-      event.target.winner.value = "";
-      event.target.loser.value = "";
+      event.target.playerOne.value = "";
+      event.target.playerTwo.value = "";
     }
 	  
   });
@@ -42,7 +53,12 @@ if (Meteor.isServer) {
   });
   
   Meteor.publish("poolgames", function () {
-    return PoolGames.find({ 'owner' : this.userId});
+    return PoolGames.find({
+	$or: [
+        { 'owner' : this.userId },
+        { 'playerTwoId' : this.userId }
+      ]
+    });
   });
   
   Meteor.publish("leaderboard", function () { 
@@ -51,33 +67,46 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  addUnconfirmedGame: function (winner,loser) {
+  addUnconfirmedGame: function (playerOne,playerTwo) {
     //Ensure the user is logged in before being able to add a game
     if (! Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
-    // Ensure both players are in the db
-    if ( ! Meteor.users.findOne({ 'username' : winner }) ) { 
-	  throw new Meteor.Error("winner-not-found");
-	}
+	
+	var playerOneId = Meteor.call('getUserId', playerOne);
+	var playerTwoId = Meteor.call('getUserId', playerTwo); 
+	
+	console.log('Players: ' + playerOneId + ' VS ' + playerTwoId);
 
-	if ( ! Meteor.users.findOne({ 'username' : loser }) ) { 
-	  throw new Meteor.Error("loser-not-found");
+	if ( playerOneId === '' || playerTwoId === '' ) { 
+	  throw new Meteor.Error('player-not-found');
 	}
 	
-	if ( winner == loser ) { 
-	  throw new Meteor.Error("play-with-self");
+	if ( playerOneId === playerTwoId ) { 
+	  throw new Meteor.Error('play-with-self');
 	}
 
 	// Insert the game
     PoolGames.insert({
 	  createdAt: new Date(),
       owner: Meteor.userId(),
-      username: Meteor.user().username,
-      winner: winner,
-      loser: loser,
+      playerOne : playerOne, 
+      playerTwo : playerTwo,
+      playerTwoId : playerTwoId,
+      winner : false,
       confirmed : false
     });
+  },
+  getUserId : function(username) { 
+	var user = Meteor.users.findOne({'username' : username }) || '';
+	if (user === '') { return ''; } else { return user._id; }
+  },
+  toggleConfirm: function (gameId, playerTwoId,setConfirmed) {
+	 if(playerTwoId != Meteor.userId()) {
+		console.log("Only other player can confirm game");
+		throw new Meteor.Error('other-player-must-confirm');
+	}
+    PoolGames.update(gameId, { $set: { confirmed: !setConfirmed} });
   }
 });
 

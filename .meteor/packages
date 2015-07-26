@@ -9,3 +9,5 @@ fourseven:scss
 reywood:bootstrap3-sass
 accounts-ui
 accounts-password
+momentjs:moment
+fortawesome:fontawesome

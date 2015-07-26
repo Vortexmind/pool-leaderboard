@@ -22,19 +22,22 @@ if (Meteor.isClient) {
 
   Template.leaderboard.helpers({
 		games : function() {
-			return Leaderboard.find({});
+			return Leaderboard.find({},{sort: {wins : -1}});
 		}
   });
 
   Template.yourGames.helpers({
 		userGames : function() {
-			return PoolGames.find({});
+			return PoolGames.find({},{sort: {createdAt : 1}});
 		}
   });
 
   Template.userGame.helpers({
 		isGameOwner : function() {
 			return this.owner === Meteor.user().username;
+		},
+		isDisabled : function() {
+			if(this.confirmed) return "disabled";
 		}
   });
 
@@ -140,6 +143,19 @@ Meteor.methods({
 	 }
 
    PoolGames.update(game._id, { $set: { 'confirmed': true} });
-  }
+
+   Meteor.call('updateLeaderboard',game.winner);
+
+  }, updateLeaderboard : function (winner) {
+		check(winner, String);
+
+	  var found = Meteor.users.findOne({'username' : winner });
+
+		if ( typeof found == 'undefined' ) {
+			throw new Meteor.Error('player-not-found');
+		}
+
+		Leaderboard.update({"username" : winner},{$inc : {'wins' : 1 }}, { 'upsert' : true } );
+	}
 });
 

@@ -43,11 +43,13 @@
     <div class="col-md-4"><h4>Player</h4></div>
     <div class="col-md-4"><h4>Games Won </h4></div>
   </div>
+  {{#each games}}
   <div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4"></div>
-    <div class="col-md-4"></div>
+    <div class="col-md-4">#</div>
+    <div class="col-md-4">{{username}}</div>
+    <div class="col-md-4">{{wins}}</div>
   </div>
+  {{/each}}
 </div>
 </template>
 
@@ -90,8 +92,8 @@
 <div class="row">
   <div class="col-md-4 form-group"><label>{{formatDate createdAt}}</label></div>
   <div class="col-md-4 form-group game-{{_id}}">
-    <button class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[0].player}}" value="{{players.[0].player}}">{{players.[0].player}}</button>
-    <button class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[1].player}}" value="{{players.[1].player}}">{{players.[1].player}}</button>
+    <button {{isDisabled}} class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[0].player}}" value="{{players.[0].player}}">{{players.[0].player}}</button>
+    <button {{isDisabled}} class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[1].player}}" value="{{players.[1].player}}">{{players.[1].player}}</button>
   </div>
   <div class="col-md-4 form-group">
     {{#if confirmed}}
@@ -104,7 +106,7 @@
     {{/if}}
     {{/if}}
 
-    
+
   </div>
 </div>
 </template>

@@ -13,7 +13,7 @@ if (Meteor.isClient) {
   });
 
   Template.registerHelper('formatDate', function(date) {
-		return moment(date).format('MM-DD-YYYY HH:mm');
+		return moment(date).startOf('hour').fromNow();
   });
 
   Template.registerHelper('getGameBtnClass',function(winner,player) {

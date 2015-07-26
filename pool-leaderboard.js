@@ -32,9 +32,9 @@ if (Meteor.isClient) {
   Template.yourGames.helpers({
 		userGames : function() {
 			if (Session.get("hideConfirmed")) {
-				return PoolGames.find({confirmed: {$ne: true}},{sort: {createdAt : 1}});
+				return PoolGames.find({confirmed: {$ne: true}},{sort: {createdAt : -1}});
 			} else {
-				return PoolGames.find({},{sort: {createdAt : 1}});
+				return PoolGames.find({},{sort: {createdAt : -1}});
 			}
 		}
   });

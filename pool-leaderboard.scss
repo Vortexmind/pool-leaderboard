@@ -2,9 +2,10 @@
 
 $font-stack:    'lato';
 $primary-color: #333;
+$alternate-font-color : #fff;
+$navbar-color-grad-a: rgb(111, 84, 153);
+$navbar-color-grad-b : rgb(86, 61, 124);
 
-
-/* CSS declarations go here */
 body {
   font-family: $font-stack;
   color: $primary-color;
@@ -15,7 +16,21 @@ body {
   right: 0;
   padding: 0;
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .fa-2 { font-size : 2em; }
+
+nav.navbar, .heading {
+	background-color: $navbar-color-grad-a;
+	background-image: linear-gradient($navbar-color-grad-b 0px, $navbar-color-grad-a 100%);
+	background-repeat: repeat-x;
+	box-sizing: border-box;
+	color: $alternate-font-color;
+}
+
+.heading a, .heading a:hover, .heading a:visited, nav.navbar a {
+	color: $alternate-font-color;
+}
+
+.add-game { margin-top : 15px;}

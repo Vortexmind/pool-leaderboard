@@ -28,7 +28,7 @@
 
 <template name="heading">
 <header>
-<nav class="navbar navbar-default">
+<nav class="navbar">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -58,7 +58,7 @@
 </template>
 
 <template name="leaderboard">
-<div class="row">
+<div class="row heading">
   <div class="col-md-12">
     <h2><a id="leaderboard">Games Leaderboard</a></h2>
   </div>
@@ -76,12 +76,12 @@
 </template>
 
 <template name="addGame">
-<div class="row">
+<div class="row heading">
   <div class="col-md-12">
     <h2>Add a game</h2>
   </div>
 </div>
-<div class="row form-group">
+<div class="row form-group add-game">
   <form class="addGame">
   <div class="col-md-4">
     <input type="text" name="playerOne" class="form-control player-one" value="{{currentUser.username}}" disabled />
@@ -99,7 +99,7 @@
 </template>
 
 <template name="yourGames">
-<div class="row">
+<div class="row heading">
   <div class="col-md-12">
     <h2><a id="my-games">My Games</a></h2>
   </div>

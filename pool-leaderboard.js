@@ -70,6 +70,9 @@ if (Meteor.isServer) {
 
   Meteor.publish("poolgames", function () {
 		var user = Meteor.users.findOne({'_id':this.userId});
+		if (typeof user.username === 'undefined') {
+			throw new Meteor.Error('username not found');
+		}
     return PoolGames.find({ 'players' : { $elemMatch : { 'player' : user.username } } });
   });
 
@@ -79,8 +82,7 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-  addUnconfirmedGame: function (playerTwo) {
-    //Ensure the user is logged in before being able to add a game
+	  addUnconfirmedGame: function (playerTwo) {
     if (! Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
@@ -89,7 +91,7 @@ Meteor.methods({
 
 		var found = Meteor.users.findOne({'username' : playerTwo });
 
-		if ( typeof found == 'undefined' ) {
+		if ( typeof found === 'undefined' ) {
 			throw new Meteor.Error('player-not-found');
 		}
 
@@ -117,6 +119,7 @@ Meteor.methods({
 		check(gameId, String);
 		check(winner, String);
 
+		// Find a game with that ID and ensure it's not confirmed already
 		var game = PoolGames.findOne(
 		 { $and : [
 				{'_id' : gameId},
@@ -124,34 +127,41 @@ Meteor.methods({
 			]
 		 });
 
-		 PoolGames.update(game._id, { $set : { 'winner' : winner}});
+		if (typeof game._id === 'undefined') {
+			throw new Meteor.Error('game-not-found-or-confirmed');
+		}
+
+		PoolGames.update(game._id, { $set : { 'winner' : winner}});
 
 	},
   confirmGame: function (gameId) {
-	 check(gameId, String);
+	  check(gameId, String);
 
-	 var game = PoolGames.findOne(
-	 { $and : [
-			{'_id' : gameId},
-			{'winner' :  { $ne : '', $exists: true }},
-			{'owner' : { $ne : Meteor.user().username }}
-		]
-	 });
+		// Only the other player can confirm a game, not the owner
+		// and the game must not have a winner already
+		var game = PoolGames.findOne(
+		{ $and : [
+			{ '_id' : gameId },
+			{ 'winner' :  { $ne : '', $exists: true }},
+			{ 'owner' : { $ne : Meteor.user().username }},
+			{ 'players' : { $elemMatch : { 'player' : Meteor.user().username } } }
+			]
+		});
 
-	 if ( typeof game == 'undefined' ) {
-			throw new Meteor.Error('game-not-ready');
-	 }
+		if ( typeof game === 'undefined' ) {
+			throw new Meteor.Error('game-cannot be confirmed');
+		}
 
-   PoolGames.update(game._id, { $set: { 'confirmed': true} });
+		PoolGames.update(game._id, { $set: { 'confirmed': true} });
 
-   Meteor.call('updateLeaderboard',game.winner);
+		Meteor.call('updateLeaderboard',game.winner);
 
   }, updateLeaderboard : function (winner) {
 		check(winner, String);
 
 	  var found = Meteor.users.findOne({'username' : winner });
 
-		if ( typeof found == 'undefined' ) {
+		if ( typeof found === 'undefined' ) {
 			throw new Meteor.Error('player-not-found');
 		}
 

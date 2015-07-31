@@ -2,8 +2,12 @@ PoolGames = new Mongo.Collection("poolgames");
 Leaderboard = new Mongo.Collection("leaderboard");
 
 if (Meteor.isClient) {
-  Meteor.subscribe("poolgames");
-  Meteor.subscribe("leaderboard");
+
+	Meteor.subscribe("leaderboard");
+
+	Tracker.autorun(function() {
+		Meteor.subscribe("poolgames",Meteor.userId());
+	});
 
 	Session.set('userFound',false);
 	Session.set('typedUser','');

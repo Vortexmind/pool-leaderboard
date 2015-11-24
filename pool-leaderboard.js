@@ -65,15 +65,13 @@ if (Meteor.isClient) {
     "click .confirm-game" : function (e) {
 	  var game_id = this._id;
 
-	  $("#game-"+game_id).hide('slow', function(){	
-		  Meteor.call("confirmGame",game_id,function(err) {
-						if (typeof err !== 'undefined') {
-							e.target.checked = false;
-							var formContainer = $(e.target).closest('.form-group');
-							formContainer.addClass('has-error').addClass('has-feedback');;
-							setTimeout(function() { formContainer.removeClass('has-error').removeClass('has-feedback'); },800);
-						}
-				});
+	  Meteor.call("confirmGame",game_id,function(err) {
+					if (typeof err !== 'undefined') {
+						e.target.checked = false;
+						var formContainer = $(e.target).closest('.form-group');
+						formContainer.addClass('has-error').addClass('has-feedback');;
+						setTimeout(function() { formContainer.removeClass('has-error').removeClass('has-feedback'); },800);
+					}
 			});
 		},
 		"click .winner-btn" : function(e) {

@@ -29,8 +29,16 @@ nav.navbar, .heading {
 	color: $alternate-font-color;
 }
 
+#login-buttons a, #login-buttons a:hover, #login-buttons a:visited {
+	color : $primary-color;
+}
+
 .heading a, .heading a:hover, .heading a:visited, nav.navbar a {
 	color: $alternate-font-color;
+}
+
+#login-name-link, #login-sign-in-link {
+	color : $alternate-font-color !important;
 }
 
 .add-game { margin-top : 15px;}

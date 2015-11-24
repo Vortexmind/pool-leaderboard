@@ -77,8 +77,9 @@ if (Meteor.isClient) {
 		}
   });
 
-  Template.addGame.events({
+  Template.addGameModal.events({
 	  'submit .addGame' : function (e) {
+	  console.log("Submit add game");
       e.preventDefault();
       var playerTwo = e.target.playerTwo.value;
 
@@ -92,7 +93,7 @@ if (Meteor.isClient) {
 						event.target.playerTwo.value = "";
 					}
 			});
-
+	$('#add-game-modal').modal('hide');
     },
     'blur .player-two' : function (e) {
 			var typedUser = e.target.value;
@@ -119,6 +120,13 @@ if (Meteor.isClient) {
 				if (Session.get('userFound') !== true) return "disabled";
 		}
 	});
+	
+  Template.heading.events({
+		'click button.js-add-game-modal' : function(e) { 
+			console.log($('#add-game-modal').modal());
+			$('#add-game-modal').modal('show');
+		}
+	  })
 }
 
 if (Meteor.isServer) {

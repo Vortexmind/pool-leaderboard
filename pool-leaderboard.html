@@ -11,23 +11,22 @@
 </head>
 
 <body>
+  <header>	  
   {{> heading}}
+  </header>
 
   <div class="container">
-  {{#if currentUser}}
-    {{> addGame}}
-  {{/if}}
-
   {{> leaderboard}}
 
   {{#if currentUser}}
     {{> yourGames}}
   {{/if}}
+  
+  {{> addGameModal}}
   </div>
 </body>
 
 <template name="heading">
-<header>
 <nav class="navbar">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -42,9 +41,12 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="#leaderboard">Leaderboard</a></li>
-        {{#if currentUser}}<li><a href="#my-games">My Games</a></li>{{/if}}
-        <li>{{> loginButtons}}</li>
+		<li>{{> loginButtons}}</li>
+		<li><a href="#leaderboard">Leaderboard</a></li>
+        {{#if currentUser}}
+			<li><a href="#my-games">My Games</a></li>
+			<li><button type="button" class="btn btn-primary js-add-game-modal">Add Game</button></li>
+		{{/if}}
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
@@ -54,7 +56,6 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-</header>
 </template>
 
 <template name="leaderboard">
@@ -75,27 +76,41 @@
 {{/each}}
 </template>
 
+<template name="addGameModal">
+<div class="modal fade" id="add-game-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add a new pool game</h4>
+      </div>
+      <form class="addGame">
+      <div class="modal-body">
+		<div class="row form-group add-game">
+		  <div class="col-md-4">
+			<input type="text" name="playerOne" class="form-control player-one" value="{{currentUser.username}}" disabled />
+		  </div>
+		  <div class="col-md-4">
+			  <input type="text" name="playerTwo" class="form-control player-two" placeholder="Player Two" tabindex="1"/>
+		  </div>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary addGame" type="submit" {{isDisabled}}>Add Game</button>
+      </div>
+      </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</template>
+
 <template name="addGame">
 <div class="row heading">
   <div class="col-md-12">
-    <h2>Add a game</h2>
+	  <button class="btn btn-primary js-add-game-modal" type="button">Add Game</button>
   </div>
 </div>
-<div class="row form-group add-game">
-  <form class="addGame">
-  <div class="col-md-4">
-    <input type="text" name="playerOne" class="form-control player-one" value="{{currentUser.username}}" disabled />
-  </div>
-  <div class="col-md-4">
-      <input type="text" name="playerTwo" class="form-control player-two" placeholder="Player Two" tabindex="1"/>
-  </div>
-  <div class="col-md-4">
-      <button class="btn btn-default addGame" type="submit" {{isDisabled}}>Add Game</button>
-  </div>
-  </form>
-</div>
-
-
 </template>
 
 <template name="yourGames">

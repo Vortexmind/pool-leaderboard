@@ -91,7 +91,10 @@
 			<input type="text" name="playerOne" class="form-control player-one" value="{{currentUser.username}}" disabled />
 		  </div>
 		  <div class="col-md-4">
-			  <input type="text" name="playerTwo" class="form-control player-two" placeholder="Player Two" tabindex="1"/>
+			<input type="text" name="playerTwo" class="form-control player-two" placeholder="Player Two" tabindex="1"/>
+		  </div>
+		  <div class="col-md-4">
+			<input type="text" name="gameDate" class="form-control" id="game-date-picker" placeholder="Game date" />
 		  </div>
 		</div>
       </div>
@@ -141,9 +144,9 @@
 </template>
 
 <template name="userGame">
-<div class="row">
-  <div class="col-md-4 col-xs-4 form-group"><label>{{formatDate createdAt}}</label></div>
-  <div class="col-md-4 col-xs-4 form-group game-{{_id}}">
+<div class="row" id="game-{{_id}}">
+  <div class="col-md-4 col-xs-4 form-group"><label>{{formatDate gameDate}}</label></div>
+  <div class="col-md-4 col-xs-4 form-group">
     <div class="row">
       <div class="col-md-6"><button {{enableIfConfirmed}} class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[0].player}}" value="{{players.[0].player}}">{{players.[0].player}}</button></div>
       <div class="col-md-6"><button {{enableIfConfirmed}} class="btn btn-default form-control winner-btn {{getGameBtnClass winner players.[1].player}}" value="{{players.[1].player}}">{{players.[1].player}}</button></div>

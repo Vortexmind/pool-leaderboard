@@ -36,9 +36,9 @@ if (Meteor.isClient) {
   Template.yourGames.helpers({
 		userGames : function() {
 			if (Session.get("hideConfirmed")) {
-				return PoolGames.find({confirmed: {$ne: true}},{sort: {createdAt : -1}});
+				return PoolGames.find({confirmed: {$ne: true}},{sort: {gameDate : -1}});
 			} else {
-				return PoolGames.find({},{sort: {createdAt : -1}});
+				return PoolGames.find({},{sort: {gameDate : -1}});
 			}
 		}
   });
@@ -63,27 +63,36 @@ if (Meteor.isClient) {
 
   Template.userGame.events({
     "click .confirm-game" : function (e) {
-      Meteor.call("confirmGame",this._id,function(err) {
-					if (typeof err !== 'undefined') {
-						e.target.checked = false;
-						var formContainer = $(e.target).closest('.form-group');
-						formContainer.addClass('has-error').addClass('has-feedback');;
-						setTimeout(function() { formContainer.removeClass('has-error').removeClass('has-feedback'); },800);
-					}
+	  var game_id = this._id;
+
+	  $("#game-"+game_id).hide('slow', function(){	
+		  Meteor.call("confirmGame",game_id,function(err) {
+						if (typeof err !== 'undefined') {
+							e.target.checked = false;
+							var formContainer = $(e.target).closest('.form-group');
+							formContainer.addClass('has-error').addClass('has-feedback');;
+							setTimeout(function() { formContainer.removeClass('has-error').removeClass('has-feedback'); },800);
+						}
+				});
 			});
 		},
 		"click .winner-btn" : function(e) {
 			Meteor.call("setWinner",this._id,e.target.value);
 		}
   });
+  
+  Template.addGameModal.rendered = function() {
+    $('#game-date-picker').datepicker();
+  }
 
   Template.addGameModal.events({
 	  'submit .addGame' : function (e) {
 	  console.log("Submit add game");
       e.preventDefault();
       var playerTwo = e.target.playerTwo.value;
+      var gameDate = e.target.gameDate.value;
 
-			Meteor.call("addUnconfirmedGame", playerTwo,function(err) {
+			Meteor.call("addUnconfirmedGame", playerTwo,gameDate,function(err) {
 					if (typeof err !== 'undefined') {
 						var formContainer = $(e.target).closest('.form-group');
 						formContainer.addClass('has-error').addClass('has-feedback');
@@ -91,6 +100,7 @@ if (Meteor.isClient) {
 					} else {
 						// Clear form
 						event.target.playerTwo.value = "";
+						event.target.gameDate.value = "";
 					}
 			});
 	$('#add-game-modal').modal('hide');
@@ -123,7 +133,6 @@ if (Meteor.isClient) {
 	
   Template.heading.events({
 		'click button.js-add-game-modal' : function(e) { 
-			console.log($('#add-game-modal').modal());
 			$('#add-game-modal').modal('show');
 		}
 	  })
@@ -147,7 +156,7 @@ if (Meteor.isServer) {
 }
 
 Meteor.methods({
-	  addUnconfirmedGame: function (playerTwo) {
+	addUnconfirmedGame: function (playerTwo, gameDate) {
     if (! Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
@@ -167,6 +176,7 @@ Meteor.methods({
 		// Insert the game
 		PoolGames.insert({
 			'createdAt' : new Date(),
+			'gameDate' : gameDate,
 			'owner' :  Meteor.user().username,
 			'players' : [
 				{

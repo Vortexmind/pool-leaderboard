@@ -7,10 +7,23 @@ Tracker.autorun(function() {
 Session.set('userFound',false);
 Session.set('typedUser','');
 
+
+/// App Routes
 Router.route('/', function () {
 	this.layout('ApplicationLayout');
 	this.render('landingpage', {to: 'mainColumn'});
 });
+
+Router.route('/leaderboard', function () {
+	this.layout('ApplicationLayout');
+	this.render('leaderboard', {to: 'mainColumn'});
+});
+
+Router.route('/games', function () {
+	this.layout('ApplicationLayout');
+	this.render('yourGames', {to: 'mainColumn'});
+});
+
 
 Accounts.ui.config({
 passwordSignupFields: "USERNAME_AND_EMAIL"

@@ -1,3 +1,4 @@
+<template name="ApplicationLayout">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,25 +10,18 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 </head>
-
 <body>
-  <header>	  
-  {{> heading}}
-  </header>
 
-  <div class="container">
-  {{> leaderboard}}
+{{> yield "topHeader"}}
 
-  {{#if currentUser}}
-    {{> yourGames}}
-  {{/if}}
+{{> yield "mainColumn"}}
   
-  {{> addGameModal}}
-  </div>
 </body>
+</template>
 
 <template name="heading">
-<nav class="navbar">
+<header>	  
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -56,9 +50,21 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+</header>
+</template>
+
+<template name="landingpage">
+	<div class="top-element">
+	{{ > leaderboard }}
+	</div>
+
+	{{> yourGames}}
+
+	{{> addGameModal}}
 </template>
 
 <template name="leaderboard">
+<div class="container">
 <div class="row heading">
   <div class="col-md-12">
     <h2><a id="leaderboard">Games Leaderboard</a></h2>
@@ -74,6 +80,7 @@
   <div class="col-md-6 col-xs-6"><h4>{{wins}}</h4></div>
 </div>
 {{/each}}
+</div>
 </template>
 
 <template name="addGameModal">
@@ -117,6 +124,7 @@
 </template>
 
 <template name="yourGames">
+<div class="container">
 <div class="row heading">
   <div class="col-md-12">
     <h2><a id="my-games">My Games</a></h2>
@@ -140,6 +148,7 @@
         {{> userGame}}
       {{/each}}
   </div>
+</div>
 </div>
 </template>
 

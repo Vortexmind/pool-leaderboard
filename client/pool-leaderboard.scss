@@ -19,27 +19,9 @@ body {
   font-size: 16px;
 }
 
+.top-element { margin-top : 45px;} 
+
 .fa-2 { font-size : 2em; }
-
-nav.navbar, .heading {
-	background-color: $navbar-color-grad-a;
-	background-image: linear-gradient($navbar-color-grad-b 0px, $navbar-color-grad-a 100%);
-	background-repeat: repeat-x;
-	box-sizing: border-box;
-	color: $alternate-font-color;
-}
-
-#login-buttons a, #login-buttons a:hover, #login-buttons a:visited {
-	color : $primary-color;
-}
-
-.heading a, .heading a:hover, .heading a:visited, nav.navbar a {
-	color: $alternate-font-color;
-}
-
-#login-name-link, #login-sign-in-link {
-	color : $alternate-font-color !important;
-}
 
 .add-game { margin-top : 15px;}
 .login-buttons-dropdown-align- { margin-top : 16px; }

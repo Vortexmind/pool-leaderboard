@@ -7,6 +7,12 @@ Tracker.autorun(function() {
 Session.set('userFound',false);
 Session.set('typedUser','');
 
+Router.route('/', function () {
+  this.layout('ApplicationLayout');
+  this.render('heading', {to: 'topHeader'});
+  this.render('landingpage', {to: 'mainColumn'});
+});
+
 Accounts.ui.config({
 passwordSignupFields: "USERNAME_AND_EMAIL"
 });
@@ -74,9 +80,9 @@ Template.userGame.events({
 	}
 });
 
-Template.addGameModal.rendered = function() {
-$('#game-date-picker').datepicker();
-}
+//Template.addGameModal.rendered = function() {
+//$('#game-date-picker').datepicker();
+//}
 
 Template.addGameModal.events({
   'submit .addGame' : function (e) {

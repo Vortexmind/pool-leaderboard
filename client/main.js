@@ -92,13 +92,8 @@ Template.userGame.events({
 	}
 });
 
-//Template.addGameModal.rendered = function() {
-//$('#game-date-picker').datepicker();
-//}
-
 Template.addGameModal.events({
   'submit .addGame' : function (e) {
-  console.log("Submit add game");
   e.preventDefault();
   var playerTwo = e.target.playerTwo.value;
   var gameDate = e.target.gameDate.value;
@@ -114,9 +109,9 @@ Template.addGameModal.events({
 					event.target.gameDate.value = "";
 				}
 		});
-$('#add-game-modal').modal('hide');
-},
-'blur .player-two' : function (e) {
+  $('#add-game-modal').modal('hide');
+  },
+  'blur .player-two' : function (e) {
 		var typedUser = e.target.value;
 
 		if (Session.get('typedUser') === typedUser) { return; }
@@ -143,7 +138,7 @@ Template.addGame.helpers({
 });
 
 Template.heading.events({
-	'click button.js-add-game-modal' : function(e) { 
+	'click a.js-add-game-modal' : function(e) { 
 		$('#add-game-modal').modal('show');
 	}
 })

@@ -8,9 +8,8 @@ Session.set('userFound',false);
 Session.set('typedUser','');
 
 Router.route('/', function () {
-  this.layout('ApplicationLayout');
-  this.render('heading', {to: 'topHeader'});
-  this.render('landingpage', {to: 'mainColumn'});
+	this.layout('ApplicationLayout');
+	this.render('landingpage', {to: 'mainColumn'});
 });
 
 Accounts.ui.config({
@@ -134,4 +133,4 @@ Template.heading.events({
 	'click button.js-add-game-modal' : function(e) { 
 		$('#add-game-modal').modal('show');
 	}
-  })
+})

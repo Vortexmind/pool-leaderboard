@@ -12,9 +12,11 @@
 </head>
 <body>
 
-{{> yield "topHeader"}}
+{{> heading}}
 
 {{> yield "mainColumn"}}
+
+{{> footer}}
   
 </body>
 </template>
@@ -22,7 +24,7 @@
 <template name="heading">
 <header>	  
 <nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container-fluid">
+  <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
@@ -51,6 +53,17 @@
   </div><!-- /.container-fluid -->
 </nav>
 </header>
+</template>
+
+<template name="footer">
+<footer>
+<div class="container">
+	<ul class="list-inline">
+		<li><span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span> Paolo Tagliaferri</li>
+		<li>Made in Italy</li>
+	</ul>
+</div>
+</footer>
 </template>
 
 <template name="landingpage">
